@@ -258,7 +258,8 @@ async function loadFlights(direction) {
   try {
     const response = await fetch(`${FLIGHT_API}/searchDayFlights?location=${selectedAirport}&departDate=${outDate}&fullResults=true`);
     const data = await response.json();
-    cachedFlights = data.results || [];
+    // API returns array directly, not wrapped in {results: [...]}
+    cachedFlights = Array.isArray(data) ? data : [];
     displayFlights(cachedFlights, direction);
   } catch (error) {
     console.error("Failed to load flights:", error);
