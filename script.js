@@ -251,13 +251,18 @@ async function loadFlights(direction) {
     return;
   }
 
+  const listId = direction === "out" ? "outFlightList" : "inFlightList";
+  const list = document.getElementById(listId);
+  list.innerHTML = '<div style="text-align:center;color:rgba(255,255,255,0.6);padding:20px;">Loading flights...</div>';
+
   try {
-    const response = await fetch(`${FLIGHT_API}/searchDayFlights?depart=${selectedAirport}&date=${outDate}&fullResults=true`);
+    const response = await fetch(`${FLIGHT_API}/searchDayFlights?location=${selectedAirport}&departDate=${outDate}&fullResults=true`);
     const data = await response.json();
     cachedFlights = data.results || [];
     displayFlights(cachedFlights, direction);
   } catch (error) {
     console.error("Failed to load flights:", error);
+    list.innerHTML = '<div style="text-align:center;color:rgba(255,255,255,0.6);padding:20px;">Failed to load flights. You can skip this step.</div>';
     cachedFlights = [];
   }
 }
@@ -272,14 +277,15 @@ function displayFlights(flights, direction) {
   }
 
   list.innerHTML = flights.slice(0, 20).map(f => {
-    const code = f.flight?.code || "Unknown";
-    const airline = f.flight?.airline || "";
-    const destination = f.flight?.arrival?.airport || "";
+    const code = (f.flight && f.flight.code) || "Unknown";
+    const airline = (f.flight && f.flight.carrier && f.flight.carrier.name) || "";
+    const destination = (f.arrival && f.arrival.airport) || (f.arrival && f.arrival.airport_iata) || "";
+    const depTime = (f.departure && f.departure.time) || "";
     return `
       <div class="flight-card" data-code="${code}" data-direction="${direction}">
         <div class="flight-info">
           <div class="flight-code">${code}</div>
-          <div class="flight-details">${airline} → ${destination}</div>
+          <div class="flight-details">${depTime}${airline ? ' • ' + airline : ''} → ${destination}</div>
         </div>
         <div class="flight-icon">🚀</div>
       </div>
@@ -317,9 +323,9 @@ function searchFlights(query, direction) {
   }
 
   const filtered = cachedFlights.filter(f => {
-    const code = (f.flight?.code || "").toLowerCase();
-    const airline = (f.flight?.airline || "").toLowerCase();
-    const dest = (f.flight?.arrival?.airport || "").toLowerCase();
+    const code = ((f.flight && f.flight.code) || "").toLowerCase();
+    const airline = ((f.flight && f.flight.carrier && f.flight.carrier.name) || "").toLowerCase();
+    const dest = ((f.arrival && f.arrival.airport) || (f.arrival && f.arrival.airport_iata) || "").toLowerCase();
     const q = query.toLowerCase();
     return code.includes(q) || airline.includes(q) || dest.includes(q);
   });
