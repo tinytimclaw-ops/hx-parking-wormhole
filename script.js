@@ -61,6 +61,20 @@ function init() {
     btn.addEventListener("click", handleAirportSelect);
   });
 
+  document.getElementById("showMoreAirports").addEventListener("click", () => {
+    const moreAirports = document.getElementById("moreAirports");
+    const btn = document.getElementById("showMoreAirports");
+    const isHidden = moreAirports.classList.contains("hidden");
+
+    if (isHidden) {
+      moreAirports.classList.remove("hidden");
+      btn.innerHTML = '<span>Show Less</span><span class="btn-icon">🔼</span>';
+    } else {
+      moreAirports.classList.add("hidden");
+      btn.innerHTML = '<span>Show Other Airports</span><span class="btn-icon">🔽</span>';
+    }
+  });
+
   document.getElementById("proceedFromDates").addEventListener("click", () => {
     outDate = document.getElementById("outDate").value;
     inDate = document.getElementById("inDate").value;
