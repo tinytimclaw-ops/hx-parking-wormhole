@@ -15,6 +15,7 @@ let outTime = "06:00";
 let inTime = "12:00";
 let outFlight = "default";
 let inFlight = "default";
+let outboundDestination = ""; // Track destination for return flight
 let currentDimension = 1;
 
 // Date helper
@@ -74,12 +75,13 @@ function init() {
   });
 
   document.getElementById("proceedFromOutFlight").addEventListener("click", () => {
+    cachedFlights = []; // Clear cache to load return flights
     loadFlights("in");
     travelToDimension(5);
   });
   document.getElementById("skipOutFlight").addEventListener("click", () => {
     outFlight = "default";
-    loadFlights("in");
+    cachedFlights = []; // Clear cache
     travelToDimension(5);
   });
 
@@ -246,17 +248,25 @@ document.addEventListener("DOMContentLoaded", init);
 let cachedFlights = [];
 
 async function loadFlights(direction) {
-  if (cachedFlights.length > 0) {
-    displayFlights(cachedFlights, direction);
-    return;
-  }
-
   const listId = direction === "out" ? "outFlightList" : "inFlightList";
   const list = document.getElementById(listId);
   list.innerHTML = '<div style="text-align:center;color:rgba(255,255,255,0.6);padding:20px;">Loading flights...</div>';
 
   try {
-    const response = await fetch(`${FLIGHT_API}/searchDayFlights?location=${selectedAirport}&departDate=${outDate}&fullResults=true`);
+    let apiUrl;
+    if (direction === "out") {
+      // Outbound: from UK airport on departure date
+      apiUrl = `${FLIGHT_API}/searchDayFlights?location=${selectedAirport}&departDate=${outDate}&fullResults=true`;
+    } else {
+      // Return: from destination back to UK airport on return date
+      if (!outboundDestination) {
+        list.innerHTML = '<div style="text-align:center;color:rgba(255,255,255,0.6);padding:20px;">Please select an outbound flight first.</div>';
+        return;
+      }
+      apiUrl = `${FLIGHT_API}/searchDayFlights?location=${outboundDestination}&departDate=${inDate}&destination=${selectedAirport}&fullResults=true`;
+    }
+
+    const response = await fetch(apiUrl);
     const data = await response.json();
     // API returns array directly, not wrapped in {results: [...]}
     cachedFlights = Array.isArray(data) ? data : [];
@@ -281,9 +291,10 @@ function displayFlights(flights, direction) {
     const code = (f.flight && f.flight.code) || "Unknown";
     const airline = (f.flight && f.flight.carrier && f.flight.carrier.name) || "";
     const destination = (f.arrival && f.arrival.airport) || (f.arrival && f.arrival.airport_iata) || "";
+    const destinationIata = (f.arrival && f.arrival.airport_iata) || "";
     const depTime = (f.departure && f.departure.time) || "";
     return `
-      <div class="flight-card" data-code="${code}" data-direction="${direction}">
+      <div class="flight-card" data-code="${code}" data-direction="${direction}" data-destination="${destinationIata}">
         <div class="flight-info">
           <div class="flight-code">${code}</div>
           <div class="flight-details">${depTime}${airline ? ' • ' + airline : ''} → ${destination}</div>
@@ -302,6 +313,7 @@ function displayFlights(flights, direction) {
 function selectFlight(card) {
   const code = card.dataset.code;
   const direction = card.dataset.direction;
+  const destination = card.dataset.destination;
 
   // Update selection
   card.parentElement.querySelectorAll(".flight-card").forEach(c => c.classList.remove("selected"));
@@ -310,6 +322,7 @@ function selectFlight(card) {
   // Store flight code
   if (direction === "out") {
     outFlight = code;
+    outboundDestination = destination; // Store destination for return flight
     document.getElementById("proceedFromOutFlight").style.display = "flex";
   } else {
     inFlight = code;
