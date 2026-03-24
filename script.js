@@ -63,19 +63,22 @@ function init() {
   document.getElementById("proceedFromDates").addEventListener("click", () => {
     outDate = document.getElementById("outDate").value;
     inDate = document.getElementById("inDate").value;
-    loadFlights("out");
     travelToDimension(3);
-  });
-
-  document.getElementById("proceedFromOutFlight").addEventListener("click", () => travelToDimension(4));
-  document.getElementById("skipOutFlight").addEventListener("click", () => {
-    outFlight = "default";
-    travelToDimension(4);
   });
 
   document.getElementById("proceedFromTimes").addEventListener("click", () => {
     outTime = document.getElementById("outTime").value;
     inTime = document.getElementById("inTime").value;
+    loadFlights("out");
+    travelToDimension(4);
+  });
+
+  document.getElementById("proceedFromOutFlight").addEventListener("click", () => {
+    loadFlights("in");
+    travelToDimension(5);
+  });
+  document.getElementById("skipOutFlight").addEventListener("click", () => {
+    outFlight = "default";
     loadFlights("in");
     travelToDimension(5);
   });
