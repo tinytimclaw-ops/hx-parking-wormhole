@@ -4,12 +4,17 @@ const AIRPORT_NAMES = {
   BHX: "Birmingham", EDI: "Edinburgh", GLA: "Glasgow", BRS: "Bristol", NCL: "Newcastle"
 };
 
+// Flight API
+const FLIGHT_API = "https://flight.dock-yard.io";
+
 // Game state
 let selectedAirport = "";
 let outDate = "";
 let inDate = "";
 let outTime = "06:00";
 let inTime = "12:00";
+let outFlight = "default";
+let inFlight = "default";
 let currentDimension = 1;
 
 // Date helper
@@ -58,17 +63,39 @@ function init() {
   document.getElementById("proceedFromDates").addEventListener("click", () => {
     outDate = document.getElementById("outDate").value;
     inDate = document.getElementById("inDate").value;
+    loadFlights("out");
     travelToDimension(3);
+  });
+
+  document.getElementById("proceedFromOutFlight").addEventListener("click", () => travelToDimension(4));
+  document.getElementById("skipOutFlight").addEventListener("click", () => {
+    outFlight = "default";
+    travelToDimension(4);
   });
 
   document.getElementById("proceedFromTimes").addEventListener("click", () => {
     outTime = document.getElementById("outTime").value;
     inTime = document.getElementById("inTime").value;
+    loadFlights("in");
+    travelToDimension(5);
+  });
+
+  document.getElementById("proceedFromInFlight").addEventListener("click", () => {
     populateSummary();
-    travelToDimension(4);
+    travelToDimension(6);
+  });
+
+  document.getElementById("skipInFlight").addEventListener("click", () => {
+    inFlight = "default";
+    populateSummary();
+    travelToDimension(6);
   });
 
   document.getElementById("launchBtn").addEventListener("click", launchSearch);
+
+  // Flight search listeners
+  document.getElementById("outFlightSearch").addEventListener("input", (e) => searchFlights(e.target.value, "out"));
+  document.getElementById("inFlightSearch").addEventListener("input", (e) => searchFlights(e.target.value, "in"));
 }
 
 function handleAirportSelect(e) {
@@ -191,7 +218,7 @@ function redirect() {
   const agent = params.get("agent") || "WY992";
   const adcode = params.get("adcode") || "";
   const promotionCode = params.get("promotionCode") || "";
-  const flight = params.get("flight") || "default";
+  const flight = outFlight || "default";
 
   // HX stays on www
   const host = window.location.host;
@@ -211,3 +238,88 @@ function redirect() {
 
 // Initialize on load
 document.addEventListener("DOMContentLoaded", init);
+
+// Flight functions
+let cachedFlights = [];
+
+async function loadFlights(direction) {
+  if (cachedFlights.length > 0) {
+    displayFlights(cachedFlights, direction);
+    return;
+  }
+
+  try {
+    const response = await fetch(`${FLIGHT_API}/searchDayFlights?depart=${selectedAirport}&date=${outDate}&fullResults=true`);
+    const data = await response.json();
+    cachedFlights = data.results || [];
+    displayFlights(cachedFlights, direction);
+  } catch (error) {
+    console.error("Failed to load flights:", error);
+    cachedFlights = [];
+  }
+}
+
+function displayFlights(flights, direction) {
+  const listId = direction === "out" ? "outFlightList" : "inFlightList";
+  const list = document.getElementById(listId);
+
+  if (!flights || flights.length === 0) {
+    list.innerHTML = '<div style="text-align:center;color:rgba(255,255,255,0.6);padding:20px;">No flights available. You can skip this step.</div>';
+    return;
+  }
+
+  list.innerHTML = flights.slice(0, 20).map(f => {
+    const code = f.flight?.code || "Unknown";
+    const airline = f.flight?.airline || "";
+    const destination = f.flight?.arrival?.airport || "";
+    return `
+      <div class="flight-card" data-code="${code}" data-direction="${direction}">
+        <div class="flight-info">
+          <div class="flight-code">${code}</div>
+          <div class="flight-details">${airline} → ${destination}</div>
+        </div>
+        <div class="flight-icon">🚀</div>
+      </div>
+    `;
+  }).join("");
+
+  // Add click handlers
+  list.querySelectorAll(".flight-card").forEach(card => {
+    card.addEventListener("click", () => selectFlight(card));
+  });
+}
+
+function selectFlight(card) {
+  const code = card.dataset.code;
+  const direction = card.dataset.direction;
+
+  // Update selection
+  card.parentElement.querySelectorAll(".flight-card").forEach(c => c.classList.remove("selected"));
+  card.classList.add("selected");
+
+  // Store flight code
+  if (direction === "out") {
+    outFlight = code;
+    document.getElementById("proceedFromOutFlight").style.display = "flex";
+  } else {
+    inFlight = code;
+    document.getElementById("proceedFromInFlight").style.display = "flex";
+  }
+}
+
+function searchFlights(query, direction) {
+  if (!query) {
+    displayFlights(cachedFlights, direction);
+    return;
+  }
+
+  const filtered = cachedFlights.filter(f => {
+    const code = (f.flight?.code || "").toLowerCase();
+    const airline = (f.flight?.airline || "").toLowerCase();
+    const dest = (f.flight?.arrival?.airport || "").toLowerCase();
+    const q = query.toLowerCase();
+    return code.includes(q) || airline.includes(q) || dest.includes(q);
+  });
+
+  displayFlights(filtered, direction);
+}

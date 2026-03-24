@@ -355,6 +355,101 @@ body {
   to { transform: rotate(360deg); }
 }
 
+/* Flight Search */
+.flight-search {
+  margin-bottom: 30px;
+}
+
+.flight-input {
+  width: 100%;
+  padding: 16px 20px;
+  font-size: 18px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 600;
+  background: rgba(10, 10, 26, 0.6);
+  border: 2px solid rgba(253, 220, 6, 0.3);
+  border-radius: 12px;
+  color: #ffffff;
+  outline: none;
+  transition: all 0.3s;
+  margin-bottom: 20px;
+}
+
+.flight-input:focus {
+  border-color: #FDDC06;
+  box-shadow: 0 0 20px rgba(253, 220, 6, 0.3);
+}
+
+.flight-list {
+  max-height: 400px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.flight-card {
+  background: rgba(84, 46, 145, 0.2);
+  border: 2px solid rgba(253, 220, 6, 0.2);
+  border-radius: 12px;
+  padding: 16px 20px;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.flight-card:hover {
+  transform: translateX(8px);
+  border-color: #FDDC06;
+  background: rgba(84, 46, 145, 0.4);
+  box-shadow: 0 4px 20px rgba(253, 220, 6, 0.3);
+}
+
+.flight-card.selected {
+  border-color: #FDDC06;
+  background: rgba(84, 46, 145, 0.5);
+  box-shadow: 0 0 30px rgba(253, 220, 6, 0.4);
+}
+
+.flight-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.flight-code {
+  font-size: 20px;
+  font-weight: 700;
+  color: #FDDC06;
+}
+
+.flight-details {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.flight-icon {
+  font-size: 32px;
+  animation: rocketFloat 2s ease-in-out infinite;
+}
+
+@keyframes rocketFloat {
+  0%, 100% { transform: translateY(0) rotate(-45deg); }
+  50% { transform: translateY(-8px) rotate(-45deg); }
+}
+
+.skip-btn {
+  margin-top: 20px;
+  background: linear-gradient(135deg, rgba(84, 46, 145, 0.5) 0%, rgba(84, 46, 145, 0.3) 100%);
+  border: 2px solid rgba(253, 220, 6, 0.3);
+}
+
+.skip-btn:hover {
+  background: linear-gradient(135deg, rgba(84, 46, 145, 0.7) 0%, rgba(84, 46, 145, 0.5) 100%);
+}
+
 /* Mission Summary */
 .mission-summary {
   display: flex;

@@ -30,18 +30,26 @@
     <div class="journey-progress">
       <div class="dimension-marker active" data-dimension="1">
         <span class="marker-icon">📍</span>
-        <span class="marker-label">Dimension 1</span>
+        <span class="marker-label">Airport</span>
       </div>
       <div class="dimension-marker" data-dimension="2">
-        <span class="marker-icon">🌀</span>
-        <span class="marker-label">Dimension 2</span>
+        <span class="marker-icon">📅</span>
+        <span class="marker-label">Dates</span>
       </div>
       <div class="dimension-marker" data-dimension="3">
-        <span class="marker-icon">⏰</span>
-        <span class="marker-label">Dimension 3</span>
+        <span class="marker-icon">🚀</span>
+        <span class="marker-label">Out Flight</span>
       </div>
       <div class="dimension-marker" data-dimension="4">
-        <span class="marker-icon">🚀</span>
+        <span class="marker-icon">⏰</span>
+        <span class="marker-label">Times</span>
+      </div>
+      <div class="dimension-marker" data-dimension="5">
+        <span class="marker-icon">🛸</span>
+        <span class="marker-label">Return Flight</span>
+      </div>
+      <div class="dimension-marker" data-dimension="6">
+        <span class="marker-icon">✨</span>
         <span class="marker-label">Launch</span>
       </div>
     </div>
@@ -105,8 +113,30 @@
       </div>
     </div>
 
-    <!-- Dimension 3: Times -->
+    <!-- Dimension 3: Outbound Flight -->
     <div class="dimension-screen" id="dimension3">
+      <div class="dimension-content">
+        <h2 class="dimension-title">🚀 Select Outbound Rocket</h2>
+        <p class="dimension-subtitle">Which vessel will take you to the stars?</p>
+
+        <div class="flight-search">
+          <input type="text" class="flight-input" id="outFlightSearch" placeholder="Search flight number or destination...">
+          <div class="flight-list" id="outFlightList"></div>
+        </div>
+
+        <button class="wormhole-btn" id="proceedFromOutFlight" style="display:none;">
+          <span>Enter Wormhole</span>
+          <span class="btn-icon">🌀</span>
+        </button>
+
+        <button class="wormhole-btn skip-btn" id="skipOutFlight">
+          <span>Skip Flight Selection</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Dimension 4: Times -->
+    <div class="dimension-screen" id="dimension4">
       <div class="dimension-content">
         <h2 class="dimension-title">⏰ Choose Your Time Coordinates</h2>
         <p class="dimension-subtitle">Precise timing for dimensional travel</p>
@@ -180,8 +210,30 @@
       </div>
     </div>
 
-    <!-- Dimension 4: Launch -->
-    <div class="dimension-screen" id="dimension4">
+    <!-- Dimension 5: Return Flight -->
+    <div class="dimension-screen" id="dimension5">
+      <div class="dimension-content">
+        <h2 class="dimension-title">🛸 Select Return Vessel</h2>
+        <p class="dimension-subtitle">Which ship will bring you home?</p>
+
+        <div class="flight-search">
+          <input type="text" class="flight-input" id="inFlightSearch" placeholder="Search return flight number or destination...">
+          <div class="flight-list" id="inFlightList"></div>
+        </div>
+
+        <button class="wormhole-btn" id="proceedFromInFlight" style="display:none;">
+          <span>Enter Wormhole</span>
+          <span class="btn-icon">🌀</span>
+        </button>
+
+        <button class="wormhole-btn skip-btn" id="skipInFlight">
+          <span>Skip Flight Selection</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Dimension 6: Launch -->
+    <div class="dimension-screen" id="dimension6">
       <div class="dimension-content">
         <h2 class="dimension-title">🚀 Mission Summary</h2>
         <p class="dimension-subtitle">Ready for interdimensional travel</p>
