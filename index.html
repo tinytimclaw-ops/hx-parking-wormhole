@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Airport Parking - Holiday Extras</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="header">
+    <img src="https://d17s4kc6349e5h.cloudfront.net/holidayextras/assets/images/logos/HolidayExtras-logo-horizontal-transparent.svg"
+         alt="Holiday Extras" height="40">
+  </header>
+
+  <div class="hero">
+    <img class="hero-img" src="assets/banner.jpg" alt="">
+    <div class="hero-overlay">
+      <h1 class="hero-title">Travel Through Time & Space</h1>
+      <p class="hero-subtitle">Book parking across dimensions</p>
+    </div>
+  </div>
+
+  <main class="game-container">
+    <!-- Wormhole transition canvas -->
+    <canvas id="wormholeCanvas" class="wormhole-canvas"></canvas>
+
+    <!-- Journey Progress -->
+    <div class="journey-progress">
+      <div class="dimension-marker active" data-dimension="1">
+        <span class="marker-icon">📍</span>
+        <span class="marker-label">Dimension 1</span>
+      </div>
+      <div class="dimension-marker" data-dimension="2">
+        <span class="marker-icon">🌀</span>
+        <span class="marker-label">Dimension 2</span>
+      </div>
+      <div class="dimension-marker" data-dimension="3">
+        <span class="marker-icon">⏰</span>
+        <span class="marker-label">Dimension 3</span>
+      </div>
+      <div class="dimension-marker" data-dimension="4">
+        <span class="marker-icon">🚀</span>
+        <span class="marker-label">Launch</span>
+      </div>
+    </div>
+
+    <!-- Dimension 1: Airport Selection -->
+    <div class="dimension-screen active" id="dimension1">
+      <div class="dimension-content">
+        <h2 class="dimension-title">⭐ Choose Your Destination</h2>
+        <p class="dimension-subtitle">Which stargate will you depart from?</p>
+
+        <div class="planet-grid">
+          <button class="planet-card" data-airport="LHR">
+            <div class="planet-icon">🌍</div>
+            <div class="planet-name">Heathrow</div>
+          </button>
+          <button class="planet-card" data-airport="LGW">
+            <div class="planet-icon">🌏</div>
+            <div class="planet-name">Gatwick</div>
+          </button>
+          <button class="planet-card" data-airport="MAN">
+            <div class="planet-icon">🌎</div>
+            <div class="planet-name">Manchester</div>
+          </button>
+          <button class="planet-card" data-airport="STN">
+            <div class="planet-icon">🪐</div>
+            <div class="planet-name">Stansted</div>
+          </button>
+          <button class="planet-card" data-airport="BHX">
+            <div class="planet-icon">🌑</div>
+            <div class="planet-name">Birmingham</div>
+          </button>
+          <button class="planet-card" data-airport="EDI">
+            <div class="planet-icon">🌕</div>
+            <div class="planet-name">Edinburgh</div>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dimension 2: Dates -->
+    <div class="dimension-screen" id="dimension2">
+      <div class="dimension-content">
+        <h2 class="dimension-title">🌌 Set Your Timeline</h2>
+        <p class="dimension-subtitle">When will you enter and exit the time warp?</p>
+
+        <div class="timeline-inputs">
+          <div class="timeline-field">
+            <label class="timeline-label">⏱️ Departure Date</label>
+            <input type="date" class="timeline-input" id="outDate">
+          </div>
+          <div class="timeline-field">
+            <label class="timeline-label">🔮 Return Date</label>
+            <input type="date" class="timeline-input" id="inDate">
+          </div>
+        </div>
+
+        <button class="wormhole-btn" id="proceedFromDates">
+          <span>Enter Wormhole</span>
+          <span class="btn-icon">🌀</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Dimension 3: Times -->
+    <div class="dimension-screen" id="dimension3">
+      <div class="dimension-content">
+        <h2 class="dimension-title">⏰ Choose Your Time Coordinates</h2>
+        <p class="dimension-subtitle">Precise timing for dimensional travel</p>
+
+        <div class="time-grid">
+          <div class="time-selector">
+            <label class="time-label">🛸 Departure Time</label>
+            <select class="time-dropdown" id="outTime">
+              <option value="00:00">00:00</option>
+              <option value="01:00">01:00</option>
+              <option value="02:00">02:00</option>
+              <option value="03:00">03:00</option>
+              <option value="04:00">04:00</option>
+              <option value="05:00">05:00</option>
+              <option value="06:00" selected>06:00</option>
+              <option value="07:00">07:00</option>
+              <option value="08:00">08:00</option>
+              <option value="09:00">09:00</option>
+              <option value="10:00">10:00</option>
+              <option value="11:00">11:00</option>
+              <option value="12:00">12:00</option>
+              <option value="13:00">13:00</option>
+              <option value="14:00">14:00</option>
+              <option value="15:00">15:00</option>
+              <option value="16:00">16:00</option>
+              <option value="17:00">17:00</option>
+              <option value="18:00">18:00</option>
+              <option value="19:00">19:00</option>
+              <option value="20:00">20:00</option>
+              <option value="21:00">21:00</option>
+              <option value="22:00">22:00</option>
+              <option value="23:00">23:00</option>
+            </select>
+          </div>
+
+          <div class="time-selector">
+            <label class="time-label">🔭 Return Time</label>
+            <select class="time-dropdown" id="inTime">
+              <option value="00:00">00:00</option>
+              <option value="01:00">01:00</option>
+              <option value="02:00">02:00</option>
+              <option value="03:00">03:00</option>
+              <option value="04:00">04:00</option>
+              <option value="05:00">05:00</option>
+              <option value="06:00">06:00</option>
+              <option value="07:00">07:00</option>
+              <option value="08:00">08:00</option>
+              <option value="09:00">09:00</option>
+              <option value="10:00">10:00</option>
+              <option value="11:00">11:00</option>
+              <option value="12:00" selected>12:00</option>
+              <option value="13:00">13:00</option>
+              <option value="14:00">14:00</option>
+              <option value="15:00">15:00</option>
+              <option value="16:00">16:00</option>
+              <option value="17:00">17:00</option>
+              <option value="18:00">18:00</option>
+              <option value="19:00">19:00</option>
+              <option value="20:00">20:00</option>
+              <option value="21:00">21:00</option>
+              <option value="22:00">22:00</option>
+              <option value="23:00">23:00</option>
+            </select>
+          </div>
+        </div>
+
+        <button class="wormhole-btn" id="proceedFromTimes">
+          <span>Enter Wormhole</span>
+          <span class="btn-icon">🌀</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Dimension 4: Launch -->
+    <div class="dimension-screen" id="dimension4">
+      <div class="dimension-content">
+        <h2 class="dimension-title">🚀 Mission Summary</h2>
+        <p class="dimension-subtitle">Ready for interdimensional travel</p>
+
+        <div class="mission-summary">
+          <div class="summary-item">
+            <span class="summary-icon">🌍</span>
+            <div>
+              <div class="summary-label">Stargate</div>
+              <div class="summary-value" id="summaryAirport">—</div>
+            </div>
+          </div>
+          <div class="summary-item">
+            <span class="summary-icon">📅</span>
+            <div>
+              <div class="summary-label">Departure</div>
+              <div class="summary-value" id="summaryOutDate">—</div>
+            </div>
+          </div>
+          <div class="summary-item">
+            <span class="summary-icon">🔮</span>
+            <div>
+              <div class="summary-label">Return</div>
+              <div class="summary-value" id="summaryInDate">—</div>
+            </div>
+          </div>
+          <div class="summary-item">
+            <span class="summary-icon">⭐</span>
+            <div>
+              <div class="summary-label">Mission Duration</div>
+              <div class="summary-value" id="summaryDays">— days</div>
+            </div>
+          </div>
+        </div>
+
+        <button class="launch-btn" id="launchBtn">
+          <span class="launch-text">🚀 LAUNCH SEARCH</span>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Holiday Extras. Less hassle. More holiday.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
